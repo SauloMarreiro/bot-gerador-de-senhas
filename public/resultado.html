@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senha Gerada</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/print.css" media="print">
+</head>
+<body>
+    <div class="card">
+        <h2>Senha Gerada</h2>
+        <p class="detalhe"><strong>Nome:</strong> {{ nome }}</p>
+        <p class="detalhe"><strong>Tipo:</strong> {{ tipo }}</p>
+        <p class="senha">{{ senha_gerada }}</p>
+        <button class="no-print" onclick="window.print()">🖨️ Imprimir Senha</button>
+        <div class="links no-print">
+            <a href="/">Gerar nova senha</a>
+            <a href="/painel">Ver painel de senhas</a>
+        </div>
+    </div>
+</body>
+</html>
