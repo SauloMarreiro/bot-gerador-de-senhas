@@ -1,7 +1,7 @@
 import socket
 import qrcode
+import qrcode.constants
 from config import Config
-
 def get_local_ip():
     """Encontra o IP local da máquina para fácil acesso na rede."""
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -21,6 +21,14 @@ def display_startup_info():
     url = f"http://{ip_local}:{Config.PORT}"
     print("\n" + "="*50)
     print("Escaneie o QR Code ou acesse a URL abaixo:")
-    qrcode.generate(url, version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4, output=lambda s: print(s, end=''))
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=2
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+    qr.print_tty()
     print(f"Servidor Local: {url}")
     print("="*50 + "\n")
