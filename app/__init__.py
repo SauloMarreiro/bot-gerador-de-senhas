@@ -5,7 +5,7 @@ def create_app(config_class=Config):
     """
     Cria e configura a instância do Flask.
     """
-    app = Flask(__name__, static_folder='../public', template_folder='../public')
+    app = Flask(__name__, static_folder='../public', template_folder='../public', static_url_path='')
     app.config.from_object(config_class)
 
     # Inicialização de módulos
