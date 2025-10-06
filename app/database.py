@@ -83,3 +83,18 @@ def resetar_senhas_diarias():
     finally:
         if conn:
             conn.close()
+            
+def marcar_como_atendido(id_senha):
+    """Muda o status de uma senha de 'aguardando' para 'atendido'."""
+    conn = get_db_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE senhas SET status = 'atendido' WHERE id = ?",
+            (id_senha,)
+        )
+        conn.commit()
+        return cursor.rowcount > 0
+    finally:
+        if conn:
+            conn.close()

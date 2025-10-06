@@ -108,3 +108,19 @@ button:hover {
 #lista-senhas li:last-child {
     border-bottom: none;
 }
+
+.atender-btn {
+    float: right;
+    padding: 5px 10px;
+    background-color: #28a745;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.atender-btn:hover {
+    background-color: #218838;
+}
+#lista-senhas li span {
+    line-height: 28px; /* Para alinhar o texto com o botão */
+}
