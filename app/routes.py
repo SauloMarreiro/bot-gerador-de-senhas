@@ -2,7 +2,8 @@
 
 from flask import Blueprint, render_template, request, jsonify, current_app
 from . import services
-
+from . import database as db
+from app import socketio
 # Criamos um "Blueprint", uma forma de organizar um grupo de rotas relacionadas.
 bp = Blueprint('main', __name__)
 
@@ -38,3 +39,14 @@ def api_painel():
     # Chama a camada de serviço para obter e organizar a fila
     fila = services.obter_fila_organizada()
     return jsonify(fila)
+
+@bp.route('/atender/<int:id_senha>', methods=['POST'])
+def atender_senha(id_senha):
+    """Marca uma senha como atendida e avisa todos os clientes via WebSocket."""
+    sucesso = db.marcar_como_atendido(id_senha)
+    
+    if sucesso:
+        socketio.emit('fila_atualizada', {'message': f'Senha {id_senha} foi atendida.'})
+        return jsonify({'status': 'success'}), 200
+    else:
+        return jsonify({'status': 'error', 'message': 'Senha não encontrada'}), 404

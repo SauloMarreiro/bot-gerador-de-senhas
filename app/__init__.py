@@ -1,5 +1,8 @@
 from flask import Flask
+from flask_socketio import SocketIO
 from config import Config
+
+socketio = SocketIO()
 
 def create_app(config_class=Config):
     """
@@ -20,5 +23,7 @@ def create_app(config_class=Config):
     from . import routes
     app.register_blueprint(routes.bp)
 
-    print("Aplicação Flask criada com sucesso.")
-    return app
+    socketio.init_app(app)
+    
+    print('Aplicação Flask e o MÓDULO SOCKET.IO foram inicizalizados.')
+    return app, socketio
