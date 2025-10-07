@@ -56,7 +56,7 @@ Siga os passos abaixo para configurar e executar o projeto em seu ambiente local
 
 **1. Clone o Repositório**
 ```bash
-git clone [https://github.com/seu-usuario/bot-gerador-de-senhas.git](https://github.com/seu-usuario/bot-gerador-de-senhas.git)
+git clone [https://github.com/SauloMarreiro/bot-gerador-de-senhas.git](https://github.com/SauloMarreiro/bot-gerador-de-senhas.git)
 cd bot-gerador-de-senhas
 ```
 
