@@ -12,9 +12,6 @@ _Um sistema de gerenciamento de filas e senhas acessado via QR Code, com painel 
 
 Este projeto é uma aplicação web construída em Python e Flask que fornece um sistema completo para geração e chamada de senhas de atendimento, ideal para pequenos estabelecimentos, consultórios ou eventos.
 
-![Screenshot do Painel de Senhas](URL_DA_SUA_IMAGEM_AQUI)
-*(Dica: Tire um screenshot do painel funcionando, suba para o GitHub no próprio repositório ou em um site como o Imgur e cole o link aqui)*
-
 ### ✨ Funcionalidades Principais
 
 - **Geração de Senhas:** Atendimento Comum e Preferencial.
