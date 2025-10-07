@@ -77,6 +77,7 @@ button:hover {
 }
 
 /* Estilos para tela de resultado e painel */
+
 .detalhe {
     font-size: 1.1rem;
     margin: 0.5rem 0;
@@ -109,6 +110,86 @@ button:hover {
     border-bottom: none;
 }
 
+/* Menu */
+
+.card {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    position: relative; /* <-- GARANTA QUE ESTA LINHA EXISTA */
+}
+
+ /* ================================== */
+ /* ESTILOS CORRIGIDOS PARA PAINEL/MENU */
+ /* ================================== */
+
+ .card-header {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-bottom: 1.5rem;
+ }
+
+ .card-header h2 {
+     margin: 0;
+ }
+
+ .options-menu {
+     position: relative; /* O container do menu é relativo */
+     cursor: pointer;
+ }
+
+ .dropdown-content {
+     display: none;
+     position: absolute; /* O dropdown em si é absoluto em relação ao container */
+     right: 0;
+     top: 100%;
+     background-color: #ffffff;
+     min-width: 160px;
+     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+     z-index: 10;
+     border-radius: 6px;
+     border: 1px solid #eee;
+ }
+
+ .options-menu:hover .dropdown-content {
+     display: block;
+ }
+
+ .dropdown-content a, .dropdown-content button {
+     color: black;
+     padding: 12px 16px;
+     text-decoration: none;
+     display: block;
+     width: 100%;
+     text-align: left;
+     background: none;
+     border: none;
+     font-size: 1rem;
+     cursor: pointer;
+ }
+
+ .dropdown-content a:hover, .dropdown-content button:hover {
+     background-color: #f1f1f1;
+ }
+
+ #limpar-btn {
+     background-color: transparent;
+     color: black;
+     font-weight: normal;
+     padding: 12px 16px;
+     margin-left: 0;
+ }
+ #limpar-btn:hover {
+     background-color: #f1f1f1;
+ }
+
+/* Botões */
+
 .atender-btn {
     float: right;
     padding: 5px 10px;
@@ -122,5 +203,5 @@ button:hover {
     background-color: #218838;
 }
 #lista-senhas li span {
-    line-height: 28px; /* Para alinhar o texto com o botão */
+    line-height: 28px;
 }

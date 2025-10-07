@@ -50,3 +50,14 @@ def atender_senha(id_senha):
         return jsonify({'status': 'success'}), 200
     else:
         return jsonify({'status': 'error', 'message': 'Senha não encontrada'}), 404
+    
+# Dentro de app/routes.py
+@bp.route('/limpar-fila', methods=['POST'])
+def limpar_fila():
+    # AQUI: A rota chama a função para apagar os dados do banco
+    db.resetar_senhas_diarias()
+    
+    # E depois avisa a todos em tempo real que a fila mudou
+    socketio.emit('fila_atualizada', {'message': 'A fila foi limpa.'})
+    
+    return jsonify({'status': 'success'}), 200

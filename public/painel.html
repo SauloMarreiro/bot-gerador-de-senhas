@@ -8,13 +8,23 @@
 </head>
 <body>
     <div class="card">
-        <h2>Painel de Senhas</h2>
-        <ul id="lista-senhas">
-            <li>Carregando...</li>
-        </ul>
-        <div class="links no-print">
-            <a href="/">Voltar</a>
+        <div class="card-header">
+            <h2>Painel de Senhas</h2>
+            <div class="options-menu no-print">
+                <span class="menu-trigger">⋮</span>
+                <div class="dropdown-content">
+                        <a href="/">Voltar</a>
+                        <button id="limpar-btn">Limpar Fila</button>
+                </div>
+            </div>
         </div>
+        <div class="card-body">
+            <ul id="lista-senhas">
+                <li>Carregando...</li>
+            </ul>
+        </div>
+    </div>
+        
     </div>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script src="/js/painel.js" defer></script>

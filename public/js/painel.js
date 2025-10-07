@@ -60,6 +60,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Dentro do painel.js
+    const limparBtn = document.getElementById('limpar-btn');
+    if (limparBtn) {
+        limparBtn.addEventListener('click', () => {
+            if (confirm('Tem certeza que...')) {
+                // AQUI: Envia um comando POST para a rota /limpar-fila
+                fetch('/limpar-fila', { method: 'POST' });
+            }
+        });
+    }
+    
     // 5. Carrega o painel pela primeira vez quando a página abre
     atualizarPainel();
 });

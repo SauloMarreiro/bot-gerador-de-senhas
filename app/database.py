@@ -98,3 +98,10 @@ def marcar_como_atendido(id_senha):
     finally:
         if conn:
             conn.close()
+            
+def resetar_senhas_diarias():
+    conn = get_db_conn()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM senhas")
+    conn.commit()
+    conn.close()
