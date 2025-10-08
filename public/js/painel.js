@@ -3,6 +3,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const socket = io();
     const listaElement = document.getElementById('lista-senhas');
 
+const optionsMenu = document.querySelector('.options-menu');
+
+    // Lógica para abrir/fechar o menu
+    if (optionsMenu) {
+        optionsMenu.addEventListener('click', (event) => {
+            event.stopPropagation(); 
+            optionsMenu.classList.toggle('menu-aberto');
+        });
+    }    window.addEventListener('click', () => {
+        if (optionsMenu && optionsMenu.classList.contains('menu-aberto')) {
+            optionsMenu.classList.remove('menu-aberto');
+        }
+    });
+
     // Função que busca e redesenha a fila inteira
     async function atualizarPainel() {
         try {
@@ -14,16 +28,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!listaElement) return;
 
             if (fila.length === 0) {
-                listaElement.innerHTML = '<li>Nenhuma senha na fila no momento.</li>';
-                return;
+                listaElement.innerHTML = '<li class="fila-vazia">Nenhuma senha na fila no momento.</li>';                return;
             }
-            
-            // Agora criamos um item de lista com um botão
             listaElement.innerHTML = fila.map((item,index) => {
                 if (index === 0) {
                     return `<li>
                                 <span><strong>${item.numero_formatado}</strong> - ${item.nome}</span>
-                                <button class="atender-btn" data-id="${item.id}">Atender</button>
+                                <button class="atender-btn" data-id="${item.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                                    Atender
+                                </button>
                             </li>`;
                 }
                 else{
@@ -52,10 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Lida com cliques nos botões "Atender"
     listaElement.addEventListener('click', (event) => {
-        if (event.target && event.target.classList.contains('atender-btn')) {
-            const senhaId = event.target.getAttribute('data-id');
-            
-            // Envia o comando POST para o servidor
+        const atenderBtn = event.target.closest('.atender-btn');
+        if (atenderBtn) {
+            const senhaId = atenderBtn.getAttribute('data-id');
             fetch(`/atender/${senhaId}`, { method: 'POST' })
                 .then(response => response.json())
                 .then(data => {
@@ -66,16 +80,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Dentro do painel.js
     const limparBtn = document.getElementById('limpar-btn');
     if (limparBtn) {
-        limparBtn.addEventListener('click', () => {
-            if (confirm('Tem certeza que...')) {
+        limparBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            if (confirm('Se você limpar a fila não será possível recuperá-la novemente.')) {
                 fetch('/limpar-fila', { method: 'POST' });
             }
         });
     }
     
-    // Carrega o painel pela primeira vez quando a página abre
     atualizarPainel();
 });
