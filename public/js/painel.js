@@ -1,11 +1,9 @@
-// public/js/painel.js (versão com WebSockets)
-
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Conecta-se ao servidor WebSocket
+    // Conecta-se ao servidor WebSocket
     const socket = io();
     const listaElement = document.getElementById('lista-senhas');
 
-    // 2. Função que busca e redesenha a fila inteira
+    // Função que busca e redesenha a fila inteira
     async function atualizarPainel() {
         try {
             const response = await fetch('/api/painel');
@@ -21,11 +19,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             // Agora criamos um item de lista com um botão
-            listaElement.innerHTML = fila.map(item => {
-                return `<li>
-                            <span><strong>${item.numero_formatado}</strong> - ${item.nome}</span>
-                            <button class="atender-btn" data-id="${item.id}">Atender</button>
-                        </li>`;
+            listaElement.innerHTML = fila.map((item,index) => {
+                if (index === 0) {
+                    return `<li>
+                                <span><strong>${item.numero_formatado}</strong> - ${item.nome}</span>
+                                <button class="atender-btn" data-id="${item.id}">Atender</button>
+                            </li>`;
+                }
+                else{
+                    return `<li>
+                    <span><strong>${item.numero_formatado}</strong> - ${item.nome}</span>
+                            </li>`;
+
+                    
+                }
             }).join('');
 
         } catch (error) {
@@ -36,14 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 3. Fica "ouvindo" o aviso do servidor
+    // Fica "ouvindo" o aviso do servidor
     socket.on('fila_atualizada', (data) => {
         console.log('Aviso recebido do servidor:', data.message);
         // Quando o aviso chega, simplesmente manda atualizar o painel
         atualizarPainel();
     });
 
-    // 4. Lida com cliques nos botões "Atender"
+    // Lida com cliques nos botões "Atender"
     listaElement.addEventListener('click', (event) => {
         if (event.target && event.target.classList.contains('atender-btn')) {
             const senhaId = event.target.getAttribute('data-id');
@@ -55,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (data.status !== 'success') {
                         console.error('Falha ao marcar como atendido.');
                     }
-                    // Não precisamos fazer nada aqui, pois o evento do socket vai cuidar da atualização!
                 });
         }
     });
@@ -65,12 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (limparBtn) {
         limparBtn.addEventListener('click', () => {
             if (confirm('Tem certeza que...')) {
-                // AQUI: Envia um comando POST para a rota /limpar-fila
                 fetch('/limpar-fila', { method: 'POST' });
             }
         });
     }
     
-    // 5. Carrega o painel pela primeira vez quando a página abre
+    // Carrega o painel pela primeira vez quando a página abre
     atualizarPainel();
 });
