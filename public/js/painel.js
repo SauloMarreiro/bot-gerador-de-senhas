@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const socket = io();
     const listaElement = document.getElementById('lista-senhas');
     const optionsMenu = document.querySelector('.options-menu');
+    const limparBtn = document.getElementById('limpar-btn');
 
     // --- Lógica do Menu Dropdown ---
     if (optionsMenu) {
@@ -16,13 +17,21 @@ document.addEventListener('DOMContentLoaded', () => {
             optionsMenu.classList.remove('menu-aberto');
         }
     });
-
-    // --- Funções ---
+    
+    // --- Funções Principais ---
     async function atualizarPainel() {
         try {
             const response = await fetch('/api/painel');
             if (!response.ok) throw new Error('Erro de rede');
-            const fila = await response.json();
+            
+            const data = await response.json();
+            const fila = data.fila;
+            const atendidos = data.atendidos;
+
+            if (document.getElementById('total-atendidos')) {
+                document.getElementById('total-atendidos').textContent = atendidos;
+            }
+
             if (!listaElement) return;
 
             if (fila.length === 0) {
@@ -31,26 +40,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             listaElement.innerHTML = fila.map((item, index) => {
-                const isAtendido = item.status === 'atendido';
-                const classeLi = isAtendido ? 'class="atendido"' : '';
-
-                const botaoHtml = (index === 0 && !isAtendido) 
-                    ? `<button class="atender-btn" data-id="${item.id}">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                        </svg>
-                        Atender
-                       </button>`
+                const botaoHtml = (index === 0) 
+                    ? `<button class="atender-btn" data-id="${item.id}">✓ Atender</button>`
                     : '';
 
-                return `<li ${classeLi}>
+                return `<li ${index === 0 ? 'class="primeiro-item"' : ''}>
                             <span><strong>${item.numero_formatado}</strong> - ${item.nome}</span>
                             ${botaoHtml}
                         </li>`;
             }).join('');
         } catch (error) {
             console.error("Falha ao atualizar o painel:", error);
-            if (listaElement) listaElement.innerHTML = '<li>Erro ao carregar a fila.</li>';
+            if (listaElement) listaElement.innerHTML = '<li class="fila-vazia">Erro ao carregar a fila.</li>';
         }
     }
 
@@ -73,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const limparBtn = document.getElementById('limpar-btn');
     if (limparBtn) {
         limparBtn.addEventListener('click', (event) => {
             event.stopPropagation();

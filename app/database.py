@@ -105,3 +105,18 @@ def resetar_senhas_diarias():
     cursor.execute("DELETE FROM senhas")
     conn.commit()
     conn.close()
+    
+
+def contar_atendidos():
+    """Conta o número total de senhas com status 'atendido'."""
+    conn = get_db_conn()
+    try:
+        cursor = conn.cursor()
+        # O COUNT(id) é um comando SQL que conta as linhas
+        cursor.execute("SELECT COUNT(id) FROM senhas WHERE status = 'atendido'")
+        # O fetchone()[0] pega o primeiro resultado da primeira coluna (o número)
+        count = cursor.fetchone()[0]
+        return count
+    finally:
+        if conn:
+            conn.close()

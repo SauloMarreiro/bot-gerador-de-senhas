@@ -146,3 +146,13 @@
 .dropdown-item:hover {
     background-color: #f1f1f1;
 }
+
+/* Estilo para o contador de atendidos */
+.contador-atendidos {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #555;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}

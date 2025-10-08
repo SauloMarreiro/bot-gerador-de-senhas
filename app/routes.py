@@ -35,10 +35,17 @@ def painel():
 
 @bp.route("/api/painel")
 def api_painel():
-    """Endpoint de API que retorna a fila de senhas em formato JSON."""
-    # Chama a camada de serviço para obter e organizar a fila
-    fila = services.obter_fila_organizada()
-    return jsonify(fila)
+    """Endpoint de API que retorna a fila E o contador de atendidos."""
+    
+    # 1. Busca a fila de espera já organizada pelo serviço
+    fila_de_espera = services.obter_fila_organizada()
+    
+    # 2. Busca o total de senhas já atendidas no banco de dados
+    total_atendidos = db.contar_atendidos()
+    
+    # 3. Retorna um único objeto JSON com ambas as informações
+    return jsonify({'fila': fila_de_espera, 'atendidos': total_atendidos})
+
 
 @bp.route('/atender/<int:id_senha>', methods=['POST'])
 def atender_senha(id_senha):
