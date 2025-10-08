@@ -106,3 +106,7 @@ venv.bak/
 
 # తిక్క
 *.tmproject
+
+# Database file
+senhas.db
+*.sqlite3
