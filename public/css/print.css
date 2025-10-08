@@ -1,66 +1,46 @@
-/* public/css/print.css */
-
-/* @page é uma regra específica para impressão que nos permite
-  controlar margens e tamanho da página. Aqui, zeramos as margens.
-*/
 @page {
-  size: auto; /* O tamanho do papel é definido pela impressora */
+  size: auto;
   margin: 0mm; 
 }
 
-/* Forçamos o corpo e o html a ocupar 100% da largura do papel
-  e removemos qualquer preenchimento ou margem padrão.
-*/
 html, body {
   width: 100%;
   height: 100%;
   margin: 0 !important;
   padding: 0 !important;
-  background-color: #fff; /* Fundo branco para economizar tinta/calor */
+  background-color: #fff;
 }
 
-/* Regras para o nosso "cartão". Removemos qualquer decoração visual
-  e diminuímos o padding para maximizar o uso do espaço.
-*/
 .card {
   width: 100% !important;
   max-width: 100% !important;
   box-shadow: none !important;
   border-radius: 0 !important;
   border: none !important;
-  padding: 5px !important; /* Padding mínimo */
+  padding: 5px !important;
   text-align: center;
-  box-sizing: border-box; /* Garante que o padding não aumente a largura total */
+  box-sizing: border-box;
 }
 
-/* Esconde qualquer elemento que não deva ser impresso */
 .no-print {
   display: none !important;
 }
 
-/* Título principal da senha */
 h2 {
     font-size: 14pt !important;
     font-weight: bold;
     margin: 5px 0;
 }
 
-/* Detalhes como Nome e Tipo */
 .detalhe {
-  font-size: 48pt !important;
+  font-size: 11pt !important;
   margin: 3px 0;
 }
 
-/* A MUDANÇA PRINCIPAL! 
-  Aumentamos drasticamente o tamanho da fonte do número da senha.
-  Usamos 'pt' (pontos) em vez de 'px' (pixels) porque é uma unidade
-  de medida física, mais confiável para impressão.
-*/
 .senha {
-  font-size: 48pt !important; /* <-- AUMENTE OU DIMINUA CONFORME NECESSÁRIO */
+  font-size: 48pt !important;
   font-weight: bold !important;
-  letter-spacing: normal !important; /* Removemos espaçamento extra */
+  letter-spacing: normal !important;
   margin: 5px 0 !important;
-  /* Garante que o texto quebre se for muito grande, em vez de vazar */
   word-break: break-all; 
 }

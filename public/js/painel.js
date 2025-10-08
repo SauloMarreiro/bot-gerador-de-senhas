@@ -1,81 +1,88 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Conecta-se ao servidor WebSocket
+    // --- Variáveis Principais ---
     const socket = io();
     const listaElement = document.getElementById('lista-senhas');
+    const optionsMenu = document.querySelector('.options-menu');
 
-    // Função que busca e redesenha a fila inteira
+    // --- Lógica do Menu Dropdown ---
+    if (optionsMenu) {
+        optionsMenu.addEventListener('click', (event) => {
+            event.stopPropagation();
+            optionsMenu.classList.toggle('menu-aberto');
+        });
+    }
+    window.addEventListener('click', () => {
+        if (optionsMenu && optionsMenu.classList.contains('menu-aberto')) {
+            optionsMenu.classList.remove('menu-aberto');
+        }
+    });
+
+    // --- Funções ---
     async function atualizarPainel() {
         try {
             const response = await fetch('/api/painel');
             if (!response.ok) throw new Error('Erro de rede');
-            
             const fila = await response.json();
-            
             if (!listaElement) return;
 
             if (fila.length === 0) {
-                listaElement.innerHTML = '<li>Nenhuma senha na fila no momento.</li>';
+                listaElement.innerHTML = '<li class="fila-vazia">Nenhuma senha na fila no momento.</li>';
                 return;
             }
             
-            // Agora criamos um item de lista com um botão
-            listaElement.innerHTML = fila.map((item,index) => {
-                if (index === 0) {
-                    return `<li>
-                                <span><strong>${item.numero_formatado}</strong> - ${item.nome}</span>
-                                <button class="atender-btn" data-id="${item.id}">Atender</button>
-                            </li>`;
-                }
-                else{
-                    return `<li>
-                    <span><strong>${item.numero_formatado}</strong> - ${item.nome}</span>
-                            </li>`;
+            listaElement.innerHTML = fila.map((item, index) => {
+                const isAtendido = item.status === 'atendido';
+                const classeLi = isAtendido ? 'class="atendido"' : '';
 
-                    
-                }
+                const botaoHtml = (index === 0 && !isAtendido) 
+                    ? `<button class="atender-btn" data-id="${item.id}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                        </svg>
+                        Atender
+                       </button>`
+                    : '';
+
+                return `<li ${classeLi}>
+                            <span><strong>${item.numero_formatado}</strong> - ${item.nome}</span>
+                            ${botaoHtml}
+                        </li>`;
             }).join('');
-
         } catch (error) {
             console.error("Falha ao atualizar o painel:", error);
-            if(listaElement) {
-                listaElement.innerHTML = '<li>Erro ao carregar a fila.</li>';
-            }
+            if (listaElement) listaElement.innerHTML = '<li>Erro ao carregar a fila.</li>';
         }
     }
 
-    // Fica "ouvindo" o aviso do servidor
+    // --- Ouvintes de Eventos (Listeners) ---
     socket.on('fila_atualizada', (data) => {
-        console.log('Aviso recebido do servidor:', data.message);
-        // Quando o aviso chega, simplesmente manda atualizar o painel
+        console.log('Aviso recebido:', data ? data.message : 'Atualização');
         atualizarPainel();
     });
 
-    // Lida com cliques nos botões "Atender"
-    listaElement.addEventListener('click', (event) => {
-        if (event.target && event.target.classList.contains('atender-btn')) {
-            const senhaId = event.target.getAttribute('data-id');
-            
-            // Envia o comando POST para o servidor
-            fetch(`/atender/${senhaId}`, { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status !== 'success') {
-                        console.error('Falha ao marcar como atendido.');
-                    }
+    if (listaElement) {
+        listaElement.addEventListener('click', (event) => {
+            const atenderBtn = event.target.closest('.atender-btn');
+            if (atenderBtn) {
+                const senhaId = atenderBtn.getAttribute('data-id');
+                atenderBtn.disabled = true;
+                fetch(`/atender/${senhaId}`, { method: 'POST' }).then(response => {
+                    if (!response.ok) atenderBtn.disabled = false;
                 });
-        }
-    });
+            }
+        });
+    }
 
-    // Dentro do painel.js
     const limparBtn = document.getElementById('limpar-btn');
     if (limparBtn) {
-        limparBtn.addEventListener('click', () => {
-            if (confirm('Tem certeza que...')) {
+        limparBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            if (confirm('Tem certeza que deseja apagar TODAS as senhas da fila?')) {
                 fetch('/limpar-fila', { method: 'POST' });
             }
         });
     }
-    
-    // Carrega o painel pela primeira vez quando a página abre
+
+    // --- Carga Inicial ---
     atualizarPainel();
 });

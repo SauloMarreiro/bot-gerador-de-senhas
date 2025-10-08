@@ -5,16 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Senhas</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/painel.css">
 </head>
 <body>
-    <div class="card">
+    <div class="card painel">
         <div class="card-header">
             <h2>Painel de Senhas</h2>
             <div class="options-menu no-print">
-                <span class="menu-trigger">⋮</span>
+                <div class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+                    </svg>
+                </div>
                 <div class="dropdown-content">
-                        <a href="/">Voltar</a>
-                        <button id="limpar-btn">Limpar Fila</button>
+                    <button id="limpar-btn" class="dropdown-item">Limpar Fila</button>
                 </div>
             </div>
         </div>
@@ -24,8 +28,7 @@
             </ul>
         </div>
     </div>
-        
-    </div>
+
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script src="/js/painel.js" defer></script>
 </body>
