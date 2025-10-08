@@ -113,6 +113,9 @@ button:hover {
 /* Menu */
 
 .card {
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
     background-color: #ffffff;
     padding: 2rem;
     border-radius: 8px;
@@ -120,12 +123,8 @@ button:hover {
     width: 100%;
     max-width: 400px;
     text-align: center;
-    position: relative; /* <-- GARANTA QUE ESTA LINHA EXISTA */
+    position: relative;
 }
-
- /* ================================== */
- /* ESTILOS CORRIGIDOS PARA PAINEL/MENU */
- /* ================================== */
 
  .card-header {
      display: flex;
@@ -137,15 +136,19 @@ button:hover {
  .card-header h2 {
      margin: 0;
  }
+ .card-body{
+    flex-grow: 1;
+    overflow: auto;
+ }
 
  .options-menu {
-     position: relative; /* O container do menu é relativo */
+     position: relative;
      cursor: pointer;
  }
 
  .dropdown-content {
      display: none;
-     position: absolute; /* O dropdown em si é absoluto em relação ao container */
+     position: absolute;
      right: 0;
      top: 100%;
      background-color: #ffffff;
