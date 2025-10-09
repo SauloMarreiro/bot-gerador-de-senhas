@@ -6,8 +6,7 @@ def gerar_nova_senha(nome, tipo):
     Ele chama a função do banco de dados e prepara os dados para a resposta.
     """
     if not nome or not tipo:
-        return None # Retorna None se os dados forem inválidos
-
+        return None
     senha_criada = db.adicionar_senha(nome, tipo)
     
     return {
@@ -18,27 +17,30 @@ def gerar_nova_senha(nome, tipo):
 
 def obter_fila_organizada():
     """
-    Serviço para buscar as senhas do banco de dados e organizá-las
-    na lógica de alternância para exibição no painel.
+    Calcula a ordem de prioridade estável (2P para 1C) para todas as senhas do dia
+    e retorna apenas as que ainda estão a aguardar.
     """
-    comuns = db.get_senhas_por_tipo('C')
-    preferenciais = db.get_senhas_por_tipo('P')
+    
+    todas_as_senhas = db.get_todas_as_senhas_do_dia()
 
-    # Lógica de alternância (exatamente como no seu projeto JS original)
-    fila_geral = []
-    i = 0
-    # Usamos o maior comprimento entre as duas listas como limite
-    limite = max(len(comuns), len(preferenciais))
-    
-    while i < limite:
-        # Adiciona uma senha preferencial, se ainda houver
-        if i < len(preferenciais):
-            # dict() converte o objeto sqlite3.Row para um dicionário padrão
-            fila_geral.append(dict(preferenciais[i]))
-        
-        # Adiciona uma senha comum, se ainda houver
-        if i < len(comuns):
-            fila_geral.append(dict(comuns[i]))
-        i += 1
-    
-    return fila_geral
+    todas_preferenciais = [s for s in todas_as_senhas if s['tipo'].startswith('P')]
+    todas_comuns = [s for s in todas_as_senhas if not s['tipo'].startswith('P')]
+
+    fila_mestra = []
+    idx_p = 0
+    idx_c = 0
+    PRIORITY_RATIO = 2
+
+    while idx_p < len(todas_preferenciais) or idx_c < len(todas_comuns):
+
+        for _ in range(PRIORITY_RATIO):
+            if idx_p < len(todas_preferenciais):
+                fila_mestra.append(dict(todas_preferenciais[idx_p]))
+                idx_p += 1
+        if idx_c < len(todas_comuns):
+            fila_mestra.append(dict(todas_comuns[idx_c]))
+            idx_c += 1
+
+    fila_final_aguardando = [s for s in fila_mestra if s['status'] == 'aguardando']
+
+    return fila_final_aguardando

@@ -112,11 +112,24 @@ def contar_atendidos():
     conn = get_db_conn()
     try:
         cursor = conn.cursor()
-        # O COUNT(id) é um comando SQL que conta as linhas
         cursor.execute("SELECT COUNT(id) FROM senhas WHERE status = 'atendido'")
         # O fetchone()[0] pega o primeiro resultado da primeira coluna (o número)
         count = cursor.fetchone()[0]
         return count
+    finally:
+        if conn:
+            conn.close()
+
+def get_todas_as_senhas_do_dia():
+    """Busca TODAS as senhas geradas no dia atual, ordenadas por ID (ordem de chegada)."""
+    conn = get_db_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT * FROM senhas WHERE DATE(criado_em) = DATE('now', 'localtime') ORDER BY id ASC"
+        )
+        senhas = cursor.fetchall()
+        return senhas
     finally:
         if conn:
             conn.close()
